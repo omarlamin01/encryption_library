@@ -4,19 +4,33 @@
 #include <string>
 #include <iostream>
 
+unsigned modulo(int value, unsigned m) {
+    int mod = value % (int) m;
+    if (mod < 0) {
+        mod += m;
+    }
+    return mod;
+}
+
 std::string ceasar_encrypt(std::string message, int key) {
     std::string encrypted_message = "";
     for (int i = 0; i < message.length(); i++) {
-        if (isupper(message[i])) {
-            encrypted_message += char(int(message[i] + key - 65) % 26 + 65);
-        } else {
-            encrypted_message += char(int(message[i] + key - 97) % 26 + 97);
-        }
+        int index = int(message[i]);
+        int new_index = modulo((index + key), 255);
+        encrypted_message += char(new_index);
     }
     return encrypted_message;
 }
 
-
+std::string ceasar_decrypt(std::string message, int key) {
+    std::string decrypted_message = "";
+    for (int i = 0; i < message.length(); i++) {
+        int index = int(message[i]);
+        int new_index = modulo((index - key), 255);
+        decrypted_message += char(new_index);
+    }
+    return decrypted_message;
+}
 
 std::string affine_cipher(int key1, int key2, std::string message, int mode) {
     std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
