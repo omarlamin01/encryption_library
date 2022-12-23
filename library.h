@@ -32,6 +32,10 @@ std::string ceasar_decrypt(std::string message, int key) {
     return decrypted_message;
 }
 
+bool ceasar_cipher(std::string encrypted_message, std::string decrypted_message, int key) {
+    return ceasar_encrypt(decrypted_message, key) == encrypted_message;
+}
+
 std::string affine_cipher(int key1, int key2, std::string message, int mode) {
     std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
