@@ -1,0 +1,4 @@
+library.exe
+cmake-build-debug/*
+*.cmake
+*.exe
