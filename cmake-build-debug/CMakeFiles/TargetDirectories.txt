@@ -1,0 +1,3 @@
+C:/Users/omar/CLionProjects/encryption_library/cmake-build-debug/CMakeFiles/encryption_library.dir
+C:/Users/omar/CLionProjects/encryption_library/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/omar/CLionProjects/encryption_library/cmake-build-debug/CMakeFiles/rebuild_cache.dir
