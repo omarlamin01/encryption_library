@@ -4,6 +4,13 @@
 #include <string>
 #include <iostream>
 
+int pgcd(int a, int b) {
+    if (b == 0) {
+        return a;
+    }
+    return pgcd(b, a % b);
+}
+
 unsigned modulo(int value, unsigned m) {
     int mod = value % (int) m;
     if (mod < 0) {
@@ -17,6 +24,7 @@ int modInverse(int A, int M)
     for (int X = 1; X < M; X++)
         if (((A % M) * (X % M)) % M == 1)
             return X;
+    return 0;
 }
 
 std::string ceasar_encrypt(std::string message, int key) {
@@ -54,49 +62,43 @@ std::string affine_encrypt(std::string message, int key1, int key2) {
 }
 
 std::string affine_decrypt(std::string message, int key1, int key2) {
+    if (pgcd(key1, 255) == 1) {
+        std::string decrypted_message = "";
+        for (int i = 0; i < message.length(); i++) {
+            int index = int(message[i]);
+            int new_index = modulo((modInverse(key1, 255) * (index - key2)), 255);
+            decrypted_message += char(new_index);
+        }
+        return decrypted_message;
+    } else {
+        return "Key1 is not coprime with 255";
+    }
+}
+
+bool affine_cipher(std::string encrypted_message, std::string decrypted_message, int key1, int key2) {
+    return affine_encrypt(decrypted_message, key1, key2) == encrypted_message;
+}
+
+std::string vigenere_encrypt(std::string message, std::string key) {
+    std::string encrypted_message = "";
+    for (int i = 0; i < message.length(); i++) {
+        int index = int(message[i]);
+        int key_index = int(key[modulo(i, key.length())]);
+        int new_index = modulo((index + key_index), 255);
+        encrypted_message += char(new_index);
+    }
+    return encrypted_message;
+}
+
+std::string vigenere_decrypt(std::string message, std::string key) {
     std::string decrypted_message = "";
     for (int i = 0; i < message.length(); i++) {
         int index = int(message[i]);
-        int new_index = modulo((key1 * (index - key2)), 255);
+        int key_index = int(key[modulo(i, key.length())]);
+        int new_index = modulo((index - key_index), 255);
         decrypted_message += char(new_index);
     }
     return decrypted_message;
-}
-
-std::string vigenere_cipher(std::string key, std::string message, int mode) {
-    std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-    switch (mode) {
-        case 0: {
-            std::string encrypted_message = "";
-            message = message;
-            for (int i = 0; i < message.length(); i++) {
-                int index = alphabet.find(tolower(message[i]));
-                int key_index = alphabet.find(tolower(key[i % key.length()]));
-                int new_index = (index + key_index) % 26;
-                encrypted_message += alphabet[new_index];
-            }
-            return encrypted_message;
-        }
-
-        case 1: {
-            std::string decrypted_message = "";
-            message = message;
-            for (int i = 0; i < message.length(); i++) {
-                int index = alphabet.find(tolower(message[i]));
-                int key_index = alphabet.find(tolower(key[i % key.length()]));
-
-                int new_index = (26 + (index - key_index)) % 26;
-                decrypted_message += alphabet[new_index];
-            }
-            return decrypted_message;
-        }
-
-        default: {
-            std::cout << "Invalid mode" << std::endl;
-            return NULL;
-        }
-    }
 }
 
 #endif //ENCRYPTION_LIBRARY_LIBRARY_H
